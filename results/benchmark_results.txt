@@ -1,0 +1,7 @@
+Forward + backward benchmark (CPU, batch size 32, float64)
+Warmup iterations: 20; timed iterations: 100
+Times are per iteration and include backward computation.
+NumPy manual forward+backward: 0.0574 ms
+PyTorch autograd forward+backward: 0.2447 ms
+NumPy/PyTorch time ratio: 0.235x
+Interpretation: a ratio above 1 means NumPy took longer; below 1 means PyTorch took longer. Results depend on hardware, library builds and load.

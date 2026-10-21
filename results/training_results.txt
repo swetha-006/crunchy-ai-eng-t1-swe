@@ -1,0 +1,9 @@
+Test MSE (original target units): 2891.1876
+Test RMSE (original target units): 53.7698
+Test MAE (original target units): 42.3692
+Epochs: 300
+Batch size: 32
+Train samples: 282
+Validation samples: 71
+Test samples: 89
+Learning rate: 0.005
