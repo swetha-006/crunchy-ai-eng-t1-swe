@@ -1,69 +1,155 @@
-# Neural Network from Scratch: NumPy vs PyTorch
+# AI Engineering Task 1: Neural Network from Scratch
 
-A two-hidden-layer regression network implemented manually in NumPy and reproduced in PyTorch.
+## Overview
 
-## Architecture
+This project implements a feed-forward neural network from scratch using NumPy and compares it with an equivalent PyTorch implementation.
 
-- Input: 10 features
-- Hidden layer 1: 16 units, ReLU
-- Hidden layer 2: 8 units, ReLU
-- Output: 1 regression value
-- Loss: mean squared error
-- Dataset: scikit-learn Diabetes dataset
+The goal is to understand the internal mechanics of neural networks, including forward propagation, loss calculation, backpropagation, gradient descent, and numerical gradient verification.
 
-The NumPy implementation does not use autograd. PyTorch autograd is used only in the PyTorch implementation and benchmark.
+## Network Architecture
 
-## Environment
+- **Input layer:** 10 features
+- **Hidden layer 1:** 16 neurons, ReLU activation
+- **Hidden layer 2:** 8 neurons, ReLU activation
+- **Output layer:** 1 neuron
+- **Loss function:** Mean Squared Error (MSE)
+- **Optimization:** Mini-batch gradient descent
 
-Use Python 3.11 in a virtual environment or Google Colab. `requirements.txt` pins the direct dependencies. Run `python environment_check.py` and save its output as environment evidence. A GPU is optional for this small model; report honestly whether CUDA was available.
+## Dataset
 
-## Install
+The model uses the Diabetes dataset provided by scikit-learn for a regression task. The dataset is divided into training, validation, and test sets. Standardization is applied using statistics fitted on the training data.
 
-```bash
-python -m venv .venv
-# Windows PowerShell:
-.venv\\Scripts\\Activate.ps1
-# macOS/Linux:
-# source .venv/bin/activate
+## Implementation
 
+### NumPy neural network
+The NumPy implementation includes:
+- Weight and bias initialization
+- Forward propagation
+- ReLU activation
+- Mean Squared Error loss
+- Manual backpropagation using the chain rule
+- Mini-batch gradient descent
+- Numerical gradient checking using finite differences
+
+### PyTorch comparison
+An equivalent network is implemented in PyTorch. The trained NumPy parameters are transferred to the PyTorch model to compare their outputs.
+
+## Verification Results
+
+- **Gradient checking:** Passed
+- **Maximum absolute gradient error:** `2.643e-11`
+- **NumPy/PyTorch output equivalence:** Passed
+- **Maximum absolute output difference:** `2.220e-16`
+
+These checks support the correctness of the gradient calculations and the equivalence of the two model implementations for the tested parameters and inputs.
+
+## Training Results
+
+Training completed for 300 epochs with a batch size of 32 and a learning rate of 0.005.
+
+| Metric | Result |
+|---|---:|
+| Training samples | 282 |
+| Validation samples | 71 |
+| Test samples | 89 |
+| Final training MSE (standardized target) | 0.3731 |
+| Final validation MSE (standardized target) | 0.7096 |
+| Test RMSE (original target units) | 53.7698 |
+| Test MAE (original target units) | 42.3692 |
+
+The validation MSE starts increasing while the training MSE continues decreasing, suggesting possible overfitting. The learning curve is saved at `results/learning_curve.png`.
+
+## Benchmark
+
+CPU benchmark results for forward and backward computation, using batch size 32 and float64:
+
+| Implementation | Time per iteration |
+|---|---:|
+| NumPy manual forward and backward | 0.0441 ms |
+| PyTorch autograd forward and backward | 0.1850 ms |
+
+These timings are specific to the test environment and may vary with hardware, software versions, and system load.
+
+## Project Structure
+
+```text
+.
+├── numpy_network.py
+├── pytorch_network.py
+├── gradient_check.py
+├── train_numpy.py
+├── compare_models.py
+├── benchmark.py
+├── environment_check.py
+├── requirements.txt
+├── MATH.md
+└── results/
+    ├── training_results.txt
+    ├── learning_curve.png
+    ├── model_comparison.txt
+    ├── benchmark_results.txt
+    ├── numpy_model.npz
+    └── pytorch_model.pt
+```
+
+## Setup
+
+Python 3.12 was used to test this project.
+
+Create and activate a virtual environment:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Install the dependencies:
+
+```powershell
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-## Run in order
+## Run the Project
 
-```bash
+Check the environment:
+
+```powershell
 python environment_check.py
+```
+
+Verify manual gradients:
+
+```powershell
 python gradient_check.py
+```
+
+Train the NumPy model:
+
+```powershell
 python train_numpy.py
+```
+
+Compare NumPy and PyTorch outputs:
+
+```powershell
 python compare_models.py
+```
+
+Benchmark both implementations:
+
+```powershell
 python benchmark.py
 ```
 
-Run `gradient_check.py` before training. It checks every weight and bias against central finite differences and exits with an error if the maximum absolute error is at least `1e-6`.
+## Mathematical Derivation
 
-`train_numpy.py` saves the trained weights and learning curve in `results/`.
-`compare_models.py` copies the trained NumPy parameters into `nn.Linear` layers and checks matching outputs.
-`benchmark.py` measures forward plus backward computation on CPU for both implementations. Actual timings depend on the machine and software environment.
+See [`MATH.md`](MATH.md) for the mathematical derivation of forward propagation, the loss function, backpropagation, and parameter updates.
 
-## Results
+## Limitations
 
-After running the scripts, include the generated output files from `results/`:
-- `learning_curve.png`
-- `training_results.txt`
-- `model_comparison.txt`
-- `benchmark_results.txt`
-- `numpy_model.npz`
-- `pytorch_model.pt`
+This is an educational neural network implementation. The benchmark is a small CPU experiment and should not be interpreted as a general performance comparison between NumPy and PyTorch. The model may benefit from early stopping or other regularization techniques.
 
-Do not claim results until the scripts have actually run. Add your environment output and measured gradient error to your final report.
+## License
 
-## Deliverables
-
-- `numpy_network.py`: forward pass, MSE, manual backpropagation, gradient descent
-- `gradient_check.py`: numerical gradient verification
-- `train_numpy.py`: real-dataset training and learning curve
-- `pytorch_network.py`: equivalent PyTorch architecture
-- `compare_models.py`: output equivalence check
-- `benchmark.py`: measured runtime comparison
-- `MATH.md`: backpropagation derivation
+Add a license if you intend to distribute this project publicly.
